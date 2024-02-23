@@ -1,10 +1,10 @@
-﻿using Domain.Abstractions;
+﻿using Application.Abstractions.Behavior.Messaging;
+using Domain.Abstractions;
 using Domain.Reader;
-using MediatR;
 
 namespace Application.Readers.Create;
 
-public sealed class CreateReaderCommandHandler : IRequestHandler<CreateReaderCommand>
+public sealed class CreateReaderCommandHandler : ICommandHandler<CreateReaderCommand>
 {
     private readonly IReaderRepository _readerRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -21,12 +21,7 @@ public sealed class CreateReaderCommandHandler : IRequestHandler<CreateReaderCom
             new FullName(request.Name, request.LastName),
             Email.Create(request.Email));
 
-        if (reader is null)
-        {
-            throw new ReaderException();
-        }
-
-        _readerRepository.Add(reader);
+        _readerRepository.Add(reader.Value);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
       

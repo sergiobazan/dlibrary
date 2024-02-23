@@ -1,8 +1,8 @@
 ﻿namespace Domain.Reader;
 
-public class ReaderException : Exception
+public class CreateReaderException : Exception
 {
-    public ReaderException()
+    public CreateReaderException()
         : base($"Reader can't be created")
     {
         

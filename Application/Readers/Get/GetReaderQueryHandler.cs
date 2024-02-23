@@ -1,11 +1,12 @@
-﻿using Application.Abstractions.Data;
+﻿using Application.Abstractions.Behavior.Messaging;
+using Application.Abstractions.Data;
+using Domain.Abstractions;
 using Domain.Reader;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Readers.Get;
 
-public class GetReaderQueryHandler : IRequestHandler<GetReaderQuery, ReaderResponse>
+public class GetReaderQueryHandler : IQueryHandler<GetReaderQuery, ReaderResponse>
 {
     private readonly IApplicationDbContext _context;
 
@@ -14,7 +15,7 @@ public class GetReaderQueryHandler : IRequestHandler<GetReaderQuery, ReaderRespo
         _context = context;
     }
 
-    public async Task<ReaderResponse> Handle(GetReaderQuery request, CancellationToken cancellationToken)
+    public async Task<Result<ReaderResponse>> Handle(GetReaderQuery request, CancellationToken cancellationToken)
     {
         var reader = await _context.Readers
             .Where(r => r.Id == request.Id)
@@ -27,7 +28,7 @@ public class GetReaderQueryHandler : IRequestHandler<GetReaderQuery, ReaderRespo
 
         if (reader is null)
         {
-            throw new ReaderException();
+           return Result.Failure<ReaderResponse>(ReaderErrors.ReaderNotFound(request.Id));
         }
 
         return reader;

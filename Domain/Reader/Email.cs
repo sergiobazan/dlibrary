@@ -1,4 +1,6 @@
-﻿namespace Domain.Reader;
+﻿using Domain.Shared;
+
+namespace Domain.Reader;
 
 public sealed record Email
 {
@@ -8,10 +10,7 @@ public sealed record Email
 
     public static Email? Create(string value)
     {
-        if (string.IsNullOrEmpty(value))
-        {
-            return null;
-        }
+        Ensure.NotNullOrEmpty(value);
 
         return new Email(value);
     }

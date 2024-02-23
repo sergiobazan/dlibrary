@@ -20,12 +20,17 @@ public class ReaderModule : ICarterModule
         });
 
 
-        app.MapGet("reader", async (Guid Id, ISender sender) =>
+        app.MapGet("reader/{id:guid}", async (Guid Id, ISender sender) =>
         {
             var query = new GetReaderQuery(Id);
             var result = await sender.Send(query);
 
-            return Results.Ok(result);
+            if (result.IsFailure)
+            {
+                return Results.NotFound(result.Error);
+            }
+
+            return Results.Ok(result.Value);
         });
     }
 }

@@ -19,7 +19,7 @@ public class Reader : Entity
 
     public Reader() { }
 
-    public static Reader Create(FullName? fullName, Email? email)
+    public static Result<Reader> Create(FullName? fullName, Email? email)
     {
         var reader = new Reader(Guid.NewGuid(), fullName, email);
 
