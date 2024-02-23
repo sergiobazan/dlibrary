@@ -3,6 +3,8 @@ using Application.Abstractions.Data;
 using Microsoft.EntityFrameworkCore;
 using Domain.Reader;
 using MediatR;
+using Domain.Books;
+using Domain.Categories;
 
 namespace Infrastructure;
 
@@ -17,6 +19,8 @@ public class ApplicationDbContext : DbContext, IUnitOfWork, IApplicationDbContex
     }
 
     public DbSet<Reader> Readers { get; set; }
+    public DbSet<Book> Books { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

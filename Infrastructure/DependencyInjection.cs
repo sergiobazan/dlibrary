@@ -1,5 +1,7 @@
 ﻿using Application.Abstractions.Data;
 using Domain.Abstractions;
+using Domain.Books;
+using Domain.Categories;
 using Domain.Reader;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +22,8 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IReaderRepository, ReaderRepository>();
+        services.AddScoped<IBookRepository, BookRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
