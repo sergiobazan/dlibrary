@@ -25,10 +25,10 @@ public class GetBookByCategoryQueryHandler : IQueryHandler<GetBookByCategoryQuer
             .Where(c => c.Id == request.Id)
             .Select(c => new GetBookByCategoryResponse(
                 c.Id,
-                c.Name.Value,
-                c.Description.Value,
+                c.Name!.Value,
+                c.Description!.Value,
                 c.Books.Select(b => new CreateBookResponse(
-                    b.Title.Value,
+                    b.Title!.Value,
                     b.PublishDate,
                     b.Author.Name,
                     b.Author.LastName,

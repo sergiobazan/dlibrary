@@ -2,6 +2,7 @@ using Presentation;
 using Application;
 using Infrastructure;
 using Carter;
+using Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.MapCarter();
 

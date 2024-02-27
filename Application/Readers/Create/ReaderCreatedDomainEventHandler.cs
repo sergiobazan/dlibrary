@@ -1,4 +1,4 @@
-﻿using Domain.Reader;
+﻿using Domain.Reader.Events;
 using MediatR;
 
 namespace Application.Readers.Create;

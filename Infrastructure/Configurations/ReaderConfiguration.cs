@@ -19,6 +19,10 @@ public class ReaderConfiguration : IEntityTypeConfiguration<Reader>
             email => email!.Value,
             value => Email.Create(value));
 
+        builder.HasMany(r => r.Loans)
+            .WithOne()
+            .HasForeignKey(l => l.ReaderId);
+
         builder.HasIndex(r => r.Email).IsUnique();
     }
 }

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Application.Readers.Get;
+using Application.Readers.NewLoan;
+using Application.Readers.Return;
 
 namespace Presentation;
 
@@ -24,6 +26,32 @@ public class ReaderModule : ICarterModule
         {
             var query = new GetReaderQuery(Id);
             var result = await sender.Send(query);
+
+            if (result.IsFailure)
+            {
+                return Results.NotFound(result.Error);
+            }
+
+            return Results.Ok(result.Value);
+        });
+
+        app.MapPost("reader/loan", async (NewLoanRequest request, ISender sender) =>
+        {
+            var command = new NewLoanCommand(request.ReaderId, request.BookId, request.NDays);
+            var result = await sender.Send(command);
+
+            if (result.IsFailure)
+            {
+                return Results.NotFound(result.Error);
+            }
+
+            return Results.Ok(result.Value);
+        });
+
+        app.MapPost("reader/return", async (ReturnBookRequest request, ISender sender) =>
+        {
+            var command = new ReturnBookCommand(request.BookId);
+            var result = await sender.Send(command);
 
             if (result.IsFailure)
             {

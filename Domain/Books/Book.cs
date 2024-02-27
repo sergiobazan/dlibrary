@@ -40,5 +40,33 @@ public class Book : Entity
 
         return book;
     }
+
+    public Result Borrow()
+    {
+        if (this.Status != Status.Available)
+        {
+            return BookErrors.BookIsNotAvailable(Id);
+        }
+
+        this.Status = Status.Borrowed;
+
+        Raise(new BookBorrowedDomainEvent(Id));
+
+        return Result.Success();
+    }
+
+    public Result Return()
+    {
+        if (this.Status != Status.Borrowed)
+        {
+            return BookErrors.BookIsNotBorrow(Id);
+        }
+
+        this.Status = Status.Available;
+
+        Raise(new BookReturnedDomainEvent(Id));
+
+        return Result.Success();
+    }
 }
 

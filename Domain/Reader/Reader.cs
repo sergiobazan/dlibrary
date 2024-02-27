@@ -1,4 +1,7 @@
 ﻿using Domain.Abstractions;
+using Domain.Books;
+using Domain.Loans;
+using Domain.Reader.Events;
 
 namespace Domain.Reader;
 
@@ -6,6 +9,10 @@ public class Reader : Entity
 {
     public FullName? FullName { get; private set; }
     public Email? Email { get; private set; }
+
+    private readonly List<Loan> _loans = new();
+
+    public List<Loan> Loans => _loans;
 
     private Reader(
         Guid id,
@@ -26,5 +33,28 @@ public class Reader : Entity
         reader.Raise(new ReaderCreatedDomainEvent(reader.Id));
 
         return reader;
+    }
+
+    public Result<Loan> NewLoan(Book book, int days)
+    {
+        if (days <= 0 || days > 5)
+        {
+            return Result.Failure<Loan>(ReaderErrors.LoanDaysOutOfRange());
+        }
+
+        var result = book.Borrow();
+
+        if (result.IsFailure)
+        {
+            return Result.Failure<Loan>(result.Error);
+        }
+
+        var loan = new Loan(Guid.NewGuid(), Id, book.Id, DateTime.UtcNow, DateTime.UtcNow.AddDays(days));
+
+        _loans.Add(loan);
+
+        Raise(new LoanConfirmedDomainEvent(Id));
+
+        return loan;
     }
 }
