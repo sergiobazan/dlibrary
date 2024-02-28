@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Application.Books.GetByTitle;
 
 namespace Presentation;
 
@@ -16,6 +17,19 @@ public class BookModule : ICarterModule
             await sender.Send(request);
 
             return Results.Created();
+        });
+
+        app.MapGet("book", async (string name, ISender send) =>
+        {
+            var query = new GetBookByTitleQuery(name);
+            var result = await send.Send(query);
+
+            if (result.IsFailure)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.Ok(result.Value);
         });
     }
 }

@@ -24,7 +24,7 @@ public class Reader : Entity
         Email = email;
     }
 
-    public Reader() { }
+    private Reader() { }
 
     public static Result<Reader> Create(FullName? fullName, Email? email)
     {

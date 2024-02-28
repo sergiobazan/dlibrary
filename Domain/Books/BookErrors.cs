@@ -10,4 +10,7 @@ public static class BookErrors
       "Books.NotBorrow", $"Book with Id = {id} was not borrowed");
     public static Error BookNotFound(Guid id) => new(
        "Books.NotFound", $"Book with Id = {id} was not found");
+
+    public static Error BookTitleNotFound(string title) => new(
+       "Books.TitleNotFound", $"Book with Title = {title} was not found");
 }
