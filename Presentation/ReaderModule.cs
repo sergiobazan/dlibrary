@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Application.Readers.Get;
 using Application.Readers.NewLoan;
 using Application.Readers.Return;
+using Application.Readers.Login;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation;
 
@@ -22,7 +24,7 @@ public class ReaderModule : ICarterModule
         });
 
 
-        app.MapGet("reader/{id:guid}", async (Guid Id, ISender sender) =>
+        app.MapGet("reader/{id:guid}", [Authorize] async (Guid Id, ISender sender) =>
         {
             var query = new GetReaderQuery(Id);
             var result = await sender.Send(query);
@@ -51,6 +53,19 @@ public class ReaderModule : ICarterModule
         app.MapPost("reader/return", async (ReturnBookRequest request, ISender sender) =>
         {
             var command = new ReturnBookCommand(request.BookId);
+            var result = await sender.Send(command);
+
+            if (result.IsFailure)
+            {
+                return Results.NotFound(result.Error);
+            }
+
+            return Results.Ok(result.Value);
+        });
+
+        app.MapPost("reader/login", async (LoginRequest request, ISender sender) =>
+        {
+            var command = new LoginCommand(request.Email);
             var result = await sender.Send(command);
 
             if (result.IsFailure)

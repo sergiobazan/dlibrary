@@ -17,6 +17,11 @@ public class ReaderRepository : IReaderRepository
         _context.Add(reader);
     }
 
+    public async Task<Reader?> GetByEmailAsync(Email email)
+    {
+        return await _context.Readers.FirstOrDefaultAsync(r => r.Email == email);
+    }
+
     public async Task<Reader?> GetByIdAsync(Guid id)
     {
        return await _context.Set<Reader>().FirstOrDefaultAsync(x => x.Id == id);

@@ -9,4 +9,7 @@ public static class ReaderErrors
 
     public static Error LoanDaysOutOfRange() => new(
        "Readers.LoanDaysOutOfRange", $"The number of days should be between 0 and 5");
+
+    public static Error InvalidCredentials => new(
+        "Readers.InvalidCredencials", "Invalid credendials.");
 }

@@ -1,9 +1,11 @@
-﻿using Application.Abstractions.Data;
+﻿using Application.Abstractions.Behavior;
+using Application.Abstractions.Data;
 using Domain.Abstractions;
 using Domain.Books;
 using Domain.Categories;
 using Domain.Loans;
 using Domain.Reader;
+using Infrastructure.Authentications;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +28,8 @@ public static class DependencyInjection
         services.AddScoped<IBookRepository, BookRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ILoanRepository, LoanRepository>();
+
+        services.AddScoped<IJwtProvider, JwtProvider>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
