@@ -37,7 +37,12 @@ public class ApplicationDbContext : DbContext, IUnitOfWork, IApplicationDbContex
         var domainEvents = ChangeTracker.Entries<Entity>()
             .Select(e => e.Entity)
             .Where(e => e.DomainEvents.Any())
-            .SelectMany(e => e.DomainEvents);
+            .SelectMany(entity =>
+            {
+                List<IDomainEvent> domainEvents = entity.DomainEvents;
+                entity.ClearDomainEvents();
+                return domainEvents;
+            });
 
         var result = await base.SaveChangesAsync(cancellationToken);
 
