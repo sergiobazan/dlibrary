@@ -1,4 +1,5 @@
-﻿using Application.Abstractions.Behavior;
+﻿using Application.Abstractions;
+using Application.Abstractions.Behavior;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +16,7 @@ public static class DependencyInjection
         {
             configuration.RegisterServicesFromAssembly(assembly);
 
+            configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
             configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 

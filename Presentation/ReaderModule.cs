@@ -24,7 +24,7 @@ public class ReaderModule : ICarterModule
         });
 
 
-        app.MapGet("reader/{id:guid}", [Authorize] async (Guid Id, ISender sender) =>
+        app.MapGet("reader/{id:guid}", async (Guid Id, ISender sender) =>
         {
             var query = new GetReaderQuery(Id);
             var result = await sender.Send(query);
