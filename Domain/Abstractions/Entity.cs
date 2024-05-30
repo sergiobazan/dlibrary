@@ -13,7 +13,7 @@ public abstract class Entity
 
     protected Entity() { }
 
-    public List<IDomainEvent> DomainEvents => _domainEvents;
+    public List<IDomainEvent> DomainEvents => _domainEvents.ToList();
 
     public void Raise(IDomainEvent domainEvent)
     {

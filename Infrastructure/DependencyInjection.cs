@@ -6,6 +6,7 @@ using Domain.Categories;
 using Domain.Loans;
 using Domain.Reader;
 using Infrastructure.Authentications;
+using Infrastructure.Interceptors;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,11 +18,15 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<OutboxMessagesInterceptor>();
+
         var connectionString = configuration.GetConnectionString("Database");
 
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
-            options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
+            options.UseNpgsql(connectionString)
+            .UseSnakeCaseNamingConvention()
+            .AddInterceptors(sp.GetService<OutboxMessagesInterceptor>()!);
         });
 
         services.AddScoped<IReaderRepository, ReaderRepository>();
