@@ -8,7 +8,7 @@ using Application.Readers.Get;
 using Application.Readers.NewLoan;
 using Application.Readers.Return;
 using Application.Readers.Login;
-using Microsoft.AspNetCore.Authorization;
+using Infrastructure.Authentications;
 
 namespace Presentation;
 
@@ -24,7 +24,9 @@ public class ReaderModule : ICarterModule
         });
 
 
-        app.MapGet("reader/{id:guid}", async (Guid Id, ISender sender) =>
+        app.MapGet("reader/{id:guid}",
+            [HasPermission(Permission.Reader)]
+            async (Guid Id, ISender sender) =>
         {
             var query = new GetReaderQuery(Id);
             var result = await sender.Send(query);

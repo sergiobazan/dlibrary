@@ -4,5 +4,5 @@ namespace Application.Abstractions.Behavior;
 
 public interface IJwtProvider
 {
-    string Generate(Reader reader);
+    Task<string> GenerateAsync(Reader reader);
 }

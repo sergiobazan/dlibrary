@@ -7,24 +7,23 @@ namespace Domain.Reader;
 
 public class Reader : Entity
 {
-    public FullName? FullName { get; private set; }
-    public Email? Email { get; private set; }
-
-    private readonly List<Loan> _loans = new();
-
-    public List<Loan> Loans => _loans;
-
+    private Reader() { }
     private Reader(
         Guid id,
         FullName? fullName,
-        Email? email) 
+        Email? email)
         : base(id)
     {
         FullName = fullName;
         Email = email;
     }
 
-    private Reader() { }
+    public FullName? FullName { get; private set; }
+    public Email? Email { get; private set; }
+    private readonly List<Loan> _loans = new();
+    public List<Loan> Loans => _loans;
+    private readonly List<Role> _roles = new();
+    public List<Role> Roles => _roles.ToList();
 
     public static Result<Reader> Create(FullName? fullName, Email? email)
     {
@@ -56,5 +55,10 @@ public class Reader : Entity
         Raise(new LoanConfirmedDomainEvent(Id));
 
         return loan;
+    }
+
+    public void AddRole(Role role)
+    {
+        _roles.Add(role);
     }
 }

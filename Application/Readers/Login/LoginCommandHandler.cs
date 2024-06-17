@@ -25,7 +25,7 @@ public sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string>
             return Result.Failure<string>(ReaderErrors.InvalidCredentials);
         }
 
-        var token = _jwtProvider.Generate(reader);
+        var token = await _jwtProvider.GenerateAsync(reader);
 
         return token;
 

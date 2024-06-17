@@ -11,19 +11,28 @@ namespace Infrastructure.Authentications;
 internal class JwtProvider : IJwtProvider
 {
     private readonly JwtOptions _jwtOptions;
+    private readonly IPermissionService _permissionService;
 
-    public JwtProvider(IOptions<JwtOptions> jwtOptions)
+    public JwtProvider(IOptions<JwtOptions> jwtOptions, IPermissionService permissionService)
     {
         _jwtOptions = jwtOptions.Value;
+        _permissionService = permissionService;
     }
 
-    public string Generate(Reader reader)
+    public async Task<string> GenerateAsync(Reader reader)
     {
-        var claims = new Claim[]
+        var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, reader.Id.ToString()),
             new(JwtRegisteredClaimNames.Email, reader.Email!.Value)
         };
+
+        HashSet<string> roles = await _permissionService.GetPermissionAsync(reader.Id);
+
+        foreach (string role in roles)
+        {
+            claims.Add(new(CustomClaims.Permissions, role));
+        }
 
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(
